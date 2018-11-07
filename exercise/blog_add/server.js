@@ -38,10 +38,11 @@ async function add (ctx) {
 
 async function del(ctx)
 {
-  let posts=M.list()
-  let id=M.get(ctx.params.id)
-  console.log(id.id);
-  posts.pop(id.id);
+  var id =ctx.params.id
+  console.log(id);
+  post=M.del(id)
+  if(!post)
+  console.error('del failed')
   ctx.redirect('/')
 }
 async function modify(ctx)
