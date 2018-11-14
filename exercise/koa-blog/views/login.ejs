@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='UTF-8'>
+    <title>index</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src='/js/bootstrap.min.js'></script>
+    <style>
+        .login {
+            padding: 50px 100px;
+        }
+        .form_pad{
+            margin-top:10px;
+        }
+        #register_status{
+            display:none;
+        }
+    </style>
+</head>
+
+<body>
+    <% include layout.ejs %>
+    <div class='login'>
+        <div class='col-md-6 offset-md-3 chance'>
+            <ul class="nav nav-tabs nav-fill">
+                <li class="nav-item bt">
+                    <a class="nav-link active text-muted " href="#loginp" data-toggle='tab'>登入</a>
+                </li>
+                <li class="nav-item bt">
+                    <a class="nav-link text-muted " href="#registerp" data-toggle='tab' id='register'>註冊</a>
+            </ul>
+            <div class="tab-content " id="myTabContent">
+                <div class="tab-pane fade show active" method='post' id="loginp" role="tabpanel" aria-labelledby="home-tab">
+                    <form class='' action="/account/login"  method='post' >
+                        <input type='text' name='account' class='form-control text-center form_pad' placeholder="請輸入Email/電話">
+                        <input type='password' name='password' class='form-control  text-center form_pad' placeholder="請輸入密碼">
+                        <button type=submit class='btn btn-light  text-center form_pad form-control'>登入</button>
+                        <div class='form_pad custom-control  custom-checkbox'>
+                                <input type="checkbox" name='check[]' class="custom-control-input" id="defaultUnchecked">
+                                <label class="custom-control-label" for="defaultUnchecked">記住我</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="tab-pane fade " id="registerp" role="tabpanel" aria-labelledby="profile-tab">
+                        <form class='form-check' method='post' action="/account/register">
+                            <input type='email' name='account' id='email' class='form-control text-center form_pad' placeholder="請輸入Email">
+                            <input type='text' name='account_name' id='name' class='form-control text-center form_pad' id='name' placeholder="請輸入姓名">
+                            <input type='password' name='password' class='form-control text-center form_pad' id='pas' placeholder="請輸入密碼">
+                            <input type='password' class='form-control text-center form_pad ' id='re' placeholder="請再次輸入密碼">
+                            <div class='alert alert-danger text-center form_pad' id='register_status'></div>
+                            <button type=submit class='btn btn-light form_pad form-control' id='submit'>註冊</button>
+                        </form>
+                </div>
+                <% if(status){ %>
+                    <div class='alert alert-danger text-center' id='stauts'>帳密輸入錯誤</div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    $('#name').blur(function(){  
+        if($(this).val()=='')
+        {
+            $("#register_status").text('請重新姓名');
+            $('#submit').attr('disabled',true);
+            $("#register_status").show('slow');
+        }
+        else
+        console.log($(this).val().toString())
+        $('#submit').attr('disabled',false);
+    })
+    $('#re').blur(function(){ 
+        if($(this).val()!=$('#pas').val())
+        {
+            $("#register_status").text('請重新密碼');
+            $('#submit').attr('disabled',true);
+            $("#register_status").show('slow');
+        }
+        else
+        {
+        console.log($(this).val().toString())
+        $('#submit').attr('disabled',false);
+        $("#register_status").hide('slow');
+        }
+    })
+    $( "#register" ).click(function() {
+        console.log('status hide')
+        $("#stauts").hide();
+    });
+    $( "#email" ).blur(function() {
+        $.ajax({
+        type: "POST",
+        url: '/account/email',
+        dataType:'json',
+        data: "account="+$('#email').val(),
+        success:
+            function(msg)
+            {
+                if(msg.toString() == 'false')
+                {
+                    $("#register_status").text('此Eamil已註冊過');
+                    $('#submit').attr('disabled',true);
+                    $("#register_status").show('slow');
+                }
+                else if(msg.toString() == 'true')
+                {
+                    console.log(msg);
+                    $("#register_status").hide();
+                    $('#submit').attr('disabled',false);
+                }
+            }
+        })
+    });
+</script>
+</html>

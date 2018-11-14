@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='UTF-8'>
+    <title>index</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src='/js/bootstrap.min.js'></script>
+    <style>
+        /* body{
+            background-color: white;
+        } */
+        .content {
+            padding: 100px 200px;
+        }
+
+        .article {
+            padding: 10px 50px;
+            margin-top: 30px;
+        }
+
+        .nav-side {
+            margin: 100px 0px;
+        }
+    </style>
+</head>
+
+<body class='bg-light'>
+    <% include layout.ejs %>
+    <% if(user){ %>
+    <div>
+        <div class="card nav-side float-left">
+            <div class="card-header">類別</div>
+            <div class="card-body">
+                <ul class="nav flex-column ">
+                    <% for(type of types) {%>
+                    <li class='<%= type.type %>'>
+                        <a class="nav-link active " id='<%= type %>' href="#" id='<%= type.type %>'>
+                            <%= type.type %></a>
+                        <ul class="flex-column " style='display:none'>
+                            <% for(i in type.subject) {%>
+                            <a href='content/<%= type.id[i] %>'>
+                                <li>
+                                    <%= type.subject[i] %>
+                                </li>
+                            </a>
+                            <% } %>
+                        </ul>
+                        <script>
+                            $('.<%= type.type %> ').click(function () {
+                                $('.<%= type.type %> ul').toggle('slow');
+                            })
+                        </script>
+                    </li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+        <div class='content'>
+            <div class='container'>
+                <a href='/create' class="btn btn-outline-success">發布文章</a>
+                <div class='articles'>
+                    <% for(article of articles) {%>
+                        <div class='article border-info border rounded'>
+                            <h2>標題:
+                                <%= article.subject %>
+                                <div class='float-right'>
+                                    <a href='/edit/<%= article.id %>' class='btn btn-outline-info text-info'>編輯</a>
+                                    <a href='/delete/article?subject=<%= article.subject %>&type=<%= article.type %>&content=<%= article.content %>'
+                                        class="btn btn-outline-danger">刪除</a>
+                                </div>
+                            </h2>
+                            <h4>類別:
+                                <%= article.type %>
+                            </h4>
+                            <p>
+                                <%= article.content %>
+                            </p>
+                            <div class="modal fade" id="exampleModal_<%= article.id %>" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <% } %>
+</body>

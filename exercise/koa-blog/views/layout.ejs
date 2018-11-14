@@ -1,0 +1,28 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-info">
+  <a class="navbar-brand" href="/"><img src='logo.jpg' width='30px' height='30px'></a>
+  <a class="navbar-brand" href="/">Blackfloat</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <% if (user) { %>
+  <a href='/' class='text-center text-dark'>
+    <%= user %></a>
+  <% } %>
+  <form class="form-inline offset-md-3">
+    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+    <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
+  </form>
+  <div class="collapse navbar-collapse offset-md-3" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <% if (user) { %>
+        <a class="nav-link" href="/account/logout">登出</a>
+        <% } else { %>
+        <a class="nav-link" href="/login">登入/註冊</a>
+        <% } %>
+      </li>
+    </ul>
+
+  </div>
+</nav>

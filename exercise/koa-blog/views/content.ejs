@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='UTF-8'>
+    <title>index</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src='/js/bootstrap.min.js'></script>
+    <style>
+        .content {
+            padding: 100px 200px;
+        }
+
+        .commit {
+            padding: 100px 300px;
+        }
+        .margin{
+            margin:30px;
+        }
+    </style>
+</head>
+
+<body>
+    <% include layout.ejs %>
+    <% if(user){ %>
+    <div class='content'>
+        <div class='card'>
+            <div class='card-header'>
+                <%= article.subject %>
+            </div>
+            <div class='card-body'>
+                <%= article.content %>
+            </div>
+        </div>
+    </div>
+    <div class='commit'>
+        <% for(var i=0;i<article.commit.length;i++) { %>
+        <div class='card margin'>
+            <div class='card-header  bg-info'>
+                <%= article.name[i] %>
+            </div>
+            <div class='card-body '>
+                <%= article.commit[i] %>
+            </div>
+        </div>
+        <% } %>
+        <div class='card'>
+            <div class='card-header'>
+                留言
+            </div>
+            <div class='card-body'>
+                <form method="POST" action='/commit/<%= article.id %>'>
+                    <div class="form-group">
+                        <textarea class="form-control" rows="3" name='commit'></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type='submit' class='btn btn-success float-right'>留言</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <% } %>
+</body>
