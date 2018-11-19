@@ -4,7 +4,7 @@
 <head>
     <meta charset='UTF-8'>
     <title>index</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src='/js/bootstrap.min.js'></script>
     <style>
@@ -40,7 +40,7 @@
                             <%= type.type %></a>
                         <ul class="flex-column " style='display:none'>
                             <% for(i in type.subject) {%>
-                            <a href='content/<%= type.id[i] %>'>
+                            <a href='/<%= email %>/<%= type.id[i] %>'>
                                 <li>
                                     <%= type.subject[i] %>
                                 </li>
@@ -62,14 +62,15 @@
                 <a href='/create' class="btn btn-outline-success">發布文章</a>
                 <div class='articles'>
                     <% for(article of articles) {%>
+                    <a href='/<%= email %>/<%= article.id %>'>
                         <div class='article border-info border rounded'>
                             <h2>標題:
                                 <%= article.subject %>
-                                <div class='float-right'>
-                                    <a href='/edit/<%= article.id %>' class='btn btn-outline-info text-info'>編輯</a>
-                                    <a href='/delete/article?subject=<%= article.subject %>&type=<%= article.type %>&content=<%= article.content %>'
-                                        class="btn btn-outline-danger">刪除</a>
-                                </div>
+                                    <div class='float-right'>
+                                        <a href='/edit/<%= article.id %>' class='btn btn-outline-info text-info'>編輯</a>
+                                        <a href='/delete/article?subject=<%= article.subject %>&type=<%= article.type %>&content=<%= article.content %>'
+                                            class="btn btn-outline-danger">刪除</a>
+                                    </div>
                             </h2>
                             <h4>類別:
                                 <%= article.type %>
@@ -81,6 +82,7 @@
                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                             </div>
                         </div>
+                    </a>
                     <% } %>
                 </div>
             </div>

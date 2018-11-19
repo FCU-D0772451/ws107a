@@ -5,12 +5,12 @@ const post_data = new Schema({
     type: String,
     subject: String,
     content: String,
-    commit:[String],
-    name:[String]
+    commit: [String],
+    name: [String]
 });
 async function post_content(ctx) {
     var body = await ctx.request.body
-    let post_content = mongoose.model(ctx.session.body.name, post_data);
+    let post_content = mongoose.model(ctx.session.body.account, post_data);
     var body_data = {
         type: body.type,
         subject: body.subject,
@@ -21,20 +21,20 @@ async function post_content(ctx) {
     ctx.redirect('/')
 }
 async function del_content(ctx) {
-    let post_content = mongoose.model(ctx.session.body.name, post_data);
+    let post_content = mongoose.model(ctx.session.body.account, post_data);
     await post_content.remove(ctx.request.query);
     ctx.redirect('/');
 }
 async function update_content(ctx) {
     var body = await ctx.request.body
-    let post_content = mongoose.model(ctx.session.body.name, post_data);
+    id = await ctx.params.id;
+    let post_content = mongoose.model(ctx.session.body.account, post_data);
     body_data = {
         subject: body.subject,
         type: body.type,
         content: body.content
     }
-    dosc = await post_content.find({ subject: body.subject })
-    await post_content.updateOne({ _id: body.id }, body_data)
+    await post_content.updateOne({ _id: id }, body_data)
     ctx.redirect('/')
 }
 async function login(ctx) {
@@ -47,12 +47,8 @@ async function login(ctx) {
 }
 async function get_index(ctx) {
     if (ctx.session.body != null) {
-        let post_content = mongoose.model(ctx.session.body.name, post_data);
-        docs = await post_content.find({})
-        docs = docs.reverse();
-        console.log(docs);
-        var alltype = typeselect(docs)
-        await ctx.render('index', { login: ctx.session.body, user: ctx.session.body.name, articles: docs, types: alltype })
+        console.log(ctx.session.body);
+        ctx.redirect(`/${ctx.session.body.account}`)
     }
     else
         await ctx.render('index', { user: ctx.session.body })
@@ -69,30 +65,38 @@ module.exports = {
     ,
     get_edit: async function (ctx) {
         article_id = await ctx.params.id;
-        let post_content = mongoose.model(ctx.session.body.name, post_data);
+        let post_content = mongoose.model(ctx.session.body.account, post_data);
         dosc = await post_content.find({ _id: article_id })
         await ctx.render('editcontent', { user: ctx.session.body.name, article: dosc[0] });
     },
     content_id: async function (ctx) {
-        let post_content = mongoose.model(ctx.session.body.name, post_data);
+        let email =await ctx.params.email;
+        let post_content = mongoose.model(email, post_data);
         article_id = await ctx.params.id;
         dosc = await post_content.find({ _id: article_id })
-        await ctx.render('content', { user: ctx.session.body.name, article: dosc[0] });
+        await ctx.render('content', { user: ctx.session.body.name, article: dosc[0],email:email });
     },
-    commit:async function(ctx)
-    {
-        let body=await ctx.request.body;
-        let post_content = mongoose.model(ctx.session.body.name, post_data);
+    commit: async function (ctx) {
+        let email=ctx.params.email
+        let body = await ctx.request.body;
+        let post_content = mongoose.model(email, post_data);
         article_id = await ctx.params.id;
         dosc = await post_content.find({ _id: article_id })
-        var data=dosc[0];
-        console.log(ctx.session.body.name)
+        var data = dosc[0];
         data.commit.push(body.commit)
         data.name.push(ctx.session.body.name)
-        console.log(data);
-        await post_content.updateOne({ _id: article_id },data)
-        var reurl='/content/' + article_id
+        await post_content.updateOne({ _id: article_id }, data)
+        var reurl = "/" + email+ "/" + article_id
         return ctx.redirect(reurl);
+    },
+    other_index: async function (ctx) {
+        let email=await ctx.params.email;
+        console.log(email)
+        let post_content = mongoose.model(email, post_data);
+        docs = await post_content.find({})
+        docs = docs.reverse();
+        var alltype = typeselect(docs)
+        await ctx.render('index', { email: email, user: ctx.session.body.name, articles:docs, types: alltype })
     }
 }
 function typeselect(docs) {
@@ -100,7 +104,6 @@ function typeselect(docs) {
     var j, flag;
     for (var i of docs) {
         flag = 0;
-        console.log(i.type)
         for (j = 0; j < alltype.length; j++) {
             if (alltype[j].type.indexOf(i.type) != -1) {
                 alltype[j].subject.push(i.subject)

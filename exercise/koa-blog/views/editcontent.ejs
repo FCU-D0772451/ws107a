@@ -4,7 +4,7 @@
 <head>
     <meta charset='UTF-8'>
     <title>index</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src='/js/bootstrap.min.js'></script>
     <style>
@@ -18,7 +18,7 @@
     <% include layout.ejs %>
     <% if(user){ %>
     <div class='content'>
-        <form method="POST" action='/update'>
+        <form method="POST" action='/update/<%= article.id %>'>
             <div class="form-group row">
                 <label for="subject" class="form-label col-md-1 text-center" >標題:</label>
                 <input type="text" class="form-control col-md-10" id="subject" name='subject' value='<%= article.subject %>'  placeholder="請輸入標題">

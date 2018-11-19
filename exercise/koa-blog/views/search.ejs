@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='UTF-8'>
+    <title>index</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src='/js/bootstrap.min.js'></script>
+    <style>
+        .content {
+            padding: 100px 300px;
+        }
+
+        .person {
+            margin-top: 20px;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body class='bg-light'>
+    <% include layout.ejs %>
+    <div class='content'>
+        <% for(person of search){ %>
+        <a href='/<%= person.account %>'>
+            <div class='person'>
+                <h3>
+                    <%= person.name %>
+                </h3>
+                <h4>
+                    <%= person.account %>
+                </h4>
+            </div>
+        </a>
+        <% } %>
+    </div>
+</body>

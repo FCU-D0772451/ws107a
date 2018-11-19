@@ -8,3 +8,4 @@ router
   .post('/register',action.post_register)
   .get('/logout',action.logout)
   .post('/email',action.post_email)
+  .post('/search',action.search)

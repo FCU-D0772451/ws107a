@@ -27,7 +27,7 @@ async function post_register(ctx)
     account_save=new Account(body_data)
     docs=await account_save.save()
     ctx.session.body=docs
-    ctx.redirect('/');
+    ctx.redirect(`/${ctx.session.body.account}`);
 }
 async function post_login(ctx)
 {
@@ -38,12 +38,12 @@ async function post_login(ctx)
         account:body.account,
         password:hash_password
     }
-    dosc=await Account.find(body_data,['account','password','name'])
+    dosc=await Account.find(body_data)
     if(dosc.length==1)
     {
     ctx.session.status=null
     ctx.session.body=dosc[0]
-    ctx.redirect('/');
+    ctx.redirect(`/${ctx.session.body.account}`);
     }
     else
     {
@@ -54,7 +54,7 @@ async function post_login(ctx)
 }
 async function logout(ctx){
     ctx.session.body=null
-    ctx.redirect('/');
+    ctx.redirect('/login');
 }
 module.exports={
     post_login:post_login,
@@ -64,9 +64,24 @@ module.exports={
         let body=await ctx.request.body;
         console.log(body);
         dosc=await Account.find(body)
-        if(dosc.length== 1)
+        console.log(dosc);
+        if(dosc.length>= 1)
         ctx.body='false';
         else
         ctx.body='true';
+    },
+    search:async function(ctx)
+    {
+        let search=await ctx.request.body.search;
+        dosc=await Account.find({},['name','account'])
+        var allsearch=[];
+        for(content of dosc)
+        {
+            if(content.name.indexOf(search)!=-1 || content.account.indexOf(search)!=-1)
+            {
+                allsearch.push(content);
+            }
+        }
+        await ctx.render('search',{user:ctx.session.body.name,search:allsearch})
     }
 }
