@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='UTF-8'>
+    <title>index</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src='/js/bootstrap.min.js'></script>
+    <style>
+        #big_head{
+            width:30px;
+            height:30px;
+        }
+        #picture{
+            height:200px;
+            width:300px;
+        }
+        .content {
+            padding: 100px 400px;
+        }
+        .upload{
+            height: 159px;
+            width: 159px;
+            opacity: 0;
+            position:absolute;
+        }
+        #preview_img{
+            height: 159px;
+            width: 159px;
+            position:absolute;
+        }
+    </style>
+</head>
+
+<body class='bg-light'>
+    <% include layout.ejs %>
+    <div class='content'>
+        <form action='/account/upload_picture' enctype="multipart/form-data" method='post' >
+            <div class='offset-md-3'>
+                <div class='form-group' id='picture'>
+                    設定大頭貼<br>
+                    <img id="preview_img" class='img-thumbnail' alt="empty preview" src='/zero.jpg'>
+                    <input type="file" id="uploader" class='upload' name='file'>
+                </div>
+            </div>
+            <div class="form-group offset-md-4">
+                <input type="submit" class='btn btn-primary '>
+            </div>
+        </form>
+    </div>
+</body>
+<script>
+    var reader = new FileReader();
+
+    reader.onload = function (e) {
+        $("#preview_img").attr("src", e.target.result);
+    }
+
+    $("#uploader").change(function () {
+        var upload_file = $("#uploader")[0].files[0];
+        reader.readAsDataURL(upload_file);
+    })
+</script>
+
+</html>

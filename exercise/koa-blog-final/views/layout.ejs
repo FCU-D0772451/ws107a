@@ -71,6 +71,10 @@
     height:90%;
     overflow: auto
   } */
+  #img-head{
+    width :30px;
+    height: 30px;
+  }
 </style>
 <% if (user) { %>
 <button class='btn btn-success' id='friend-btn'>好友</button>
@@ -81,36 +85,54 @@
   <div id='friends'>
   </div>
 </div>
-<div id='chatroom'>
+<div id='chatroom' style='display:none'>
   <div class="card-header" id='friend_name'>
     name
   </div>
   <div id='chat_content' style='overflow: auto; height:70%'>
-    <li>123</li>
-    <li>123</li>
-    <li>123</li>
-    <li>123</li>
-    <li>123</li>
   </div>
   <form class='row' id='chatform' action='123'>
-    <input type='text' class='offset-md-1 col-md-6' id = 'chatinput'>
+    <input type='text' class='offset-md-1 col-md-6' id='chatinput'>
     <button class='btn col-md-4' type='submit'>傳送</button>
   </form>
 </div>
 <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 <script>
-  var socket = io();
-  $('form').submit(function () {
-    socket.emit('chat message', $('#chatinput').val());
-    $('#chatinput').val('');
-    console.log("hi")
-    return false;
-  });
+  var chatroom;
   var flag = 0;
+  var time = 0;
+  $('#friend_name').click(function () {
+    $('#chatroom').hide();
+    socket.close();
+  })
   function myFunction(name, id) {
+    const socket = io({
+      autoConnect: false
+    });
+    socket.open();
     console.log(name)
+    chatroom = id;
+    $.ajax({
+      type: "POST",
+      url: '/chatroom',
+      dataType: 'json',
+      data: "name=" + chatroom,
+      success:
+        function (msg) {
+          console.log(msg)
+        }
+    })
     document.querySelector('#friend_name').innerHTML = name
+    $('#chatform').submit(function () {
+      socket.emit(chatroom, $('#chatinput').val());
+      $('#chatinput').val('');
+      return false;
+    });
+    socket.on(chatroom, function (msg) {
+      $('#chat_content').append($('<li>').addClass('list-group-item').text(msg));
+    });
+    $('#chatroom').show();
   }
   $(function () {
     var friends = document.querySelector('#friends');
@@ -129,7 +151,7 @@
       $(this).hide();
       if (flag != 1) {
         for (i of data) {
-          $('#friends').append(`<div class='row' style='padding:5px 20px'><a href=/${i.friend_email} class="list-group-item col-md-8">${i.friend_name}</a><button id='${i.friend_ID}' class='btn btn-primary col-md-4' onclick="myFunction('${i.friend_name}','${i.chatroom}')">聊天 </button></div>`)
+          $('#friends').append(`<div class='row' style='padding:5px 20px'><a href=/${i.friend_email} class="list-group-item col-md-8">${i.friend_name}<img src='/image/${i.friend_ID}.jpg' id='img-head'></a><button id='${i.friend_ID}' class='btn btn-primary col-md-4' onclick="myFunction('${i.friend_name}','${i.chatroom}')">聊天 </button></div>`)
         }
       }
       $('#chatbar').show(500);

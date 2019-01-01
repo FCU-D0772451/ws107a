@@ -133,7 +133,6 @@ module.exports = {
     friend_find:async function(ctx){
         var friends_db = mongoose.model(`friend_${ctx.session.body.account}`, Account_friend);
         var friends = await friends_db.find({});
-        console.log(friends)
         ctx.body = friends;
     }
 }

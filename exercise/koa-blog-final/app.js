@@ -2,7 +2,7 @@ const Koa = require('koa')
 const app = new Koa()
 const logger = require('koa-logger')
 var http = require('http').Server(app.callback());
-var io = require('socket.io')(http);
+var io = module.exports=require('socket.io')(http);
 const koaBody = require('koa-body')
 const serve = require('koa-static');
 const views = require('koa-views');
@@ -29,16 +29,6 @@ app.use(account.routes())
   .use(account.allowedMethods())
 app.use(content.routes())
   .use(content.allowedMethods())
-io.on('connection', function (socket) {
-  console.log('connection')
-  socket.on('chat message', function (msg) {
-    console.log(msg)
-    io.emit('chat message', msg);
-  });
-});
 http.listen(3000, function () {
   console.log('listening on *:' + 3000);
 });
-
-// app.listen('3000',()=>
-// console.log('listen on 3000 port'))
