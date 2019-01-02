@@ -106,13 +106,19 @@
     $('#chatroom').hide();
     socket.close();
   })
-  function myFunction(name, id) {
-    const socket = io({
-      autoConnect: false
+  $('#chatform').submit(function () {
+      socket = io();
+      socket.emit(chatroom, $('#chatinput').val());
+      console.log(chatroom)
+      $('#chatinput').val('');
+      return false;
     });
+  function myFunction(name, id) {
+    var socket = io();
+    socket.close();
     socket.open();
     console.log(name)
-    chatroom = id;
+     chatroom = id;
     $.ajax({
       type: "POST",
       url: '/chatroom',
@@ -124,11 +130,6 @@
         }
     })
     document.querySelector('#friend_name').innerHTML = name
-    $('#chatform').submit(function () {
-      socket.emit(chatroom, $('#chatinput').val());
-      $('#chatinput').val('');
-      return false;
-    });
     socket.on(chatroom, function (msg) {
       $('#chat_content').append($('<li>').addClass('list-group-item').text(msg));
     });
@@ -151,7 +152,7 @@
       $(this).hide();
       if (flag != 1) {
         for (i of data) {
-          $('#friends').append(`<div class='row' style='padding:5px 20px'><a href=/${i.friend_email} class="list-group-item col-md-8">${i.friend_name}<img src='/image/${i.friend_ID}.jpg' id='img-head'></a><button id='${i.friend_ID}' class='btn btn-primary col-md-4' onclick="myFunction('${i.friend_name}','${i.chatroom}')">聊天 </button></div>`)
+          $('#friends').append(`<div class='row' style='padding:5px 20px'><a href=/${i.friend_email} class="list-group-item col-md-8">${i.friend_name}</a><button id='${i.friend_ID}' class='btn btn-primary col-md-4' onclick="myFunction('${i.friend_name}','${i.chatroom}')">聊天 </button></div>`)
         }
       }
       $('#chatbar').show(500);

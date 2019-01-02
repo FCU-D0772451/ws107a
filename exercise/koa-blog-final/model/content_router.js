@@ -23,6 +23,7 @@ router
         setTimeout(()=>{ console.log('connection')
         console.log('chatroom is %s',chatroom)
         socket.on(chatroom, function (msg) {
+            console.log(chatroom);
             console.log(msg)
             io.emit(chatroom,  msg);
         });},1000)
