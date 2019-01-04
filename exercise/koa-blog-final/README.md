@@ -9,6 +9,8 @@ $ mongodb  //開啟mongodb server
 $ node app.js
 ```
 
+
+* 網址:https://blackfloat.com/
 ## 已完成功能
 * 登入
 * 註冊
@@ -29,5 +31,4 @@ $ node app.js
 1. 在一個io.on('connection')之中 如果換使用者 socket.on(value) value值無法改變
 2. io.on除了把頁面重開或是關掉 不然都不會取消連線
 3. 在切換使用者時，出現bug。
-* gandi net壞掉了，domain name無法轉成ip
 
