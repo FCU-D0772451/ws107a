@@ -10,7 +10,7 @@ $ node app.js
 ```
 
 
-* [blog網址](https://blackfloat.com/)
+
 
 
 ## 已完成功能
