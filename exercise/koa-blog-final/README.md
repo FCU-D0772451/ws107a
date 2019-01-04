@@ -10,7 +10,9 @@ $ node app.js
 ```
 
 
-* 網址:https://blackfloat.com/
+* [blog網址](https://blackfloat.com/)
+
+
 ## 已完成功能
 * 登入
 * 註冊
